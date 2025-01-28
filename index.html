@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Ops+One&display=swap"
+      rel="stylesheet"
+    />
+    <title>Scramble Sprint</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <style>
+      * {
+        font-family: "Audiowide", serif;
+      }
+
+      #time {
+        font-family: "Black Ops One", serif;
+        /* text-shadow: 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white, 0 0 3px white; */
+      }
+
+      .fa-solid,
+      #submitBtn,
+      #instructionsModal,
+      #time {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0);
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #06b6d4, #3b82f6, #9333ea);
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #06b6d4, #2563eb, #7c3aed);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-black min-h-screen flex justify-center relative overflow-hidden tracking-widest"
+  >
+    <img
+      src="/assets/bg.png"
+      alt=""
+      class="absolute bottom-0 bg-cover w-full h-auto"
+    />
+
+    <!-- Info Button -->
+    <button
+      id="infoBtn"
+      title="Instructions"
+      class="fixed w-[56px] h-[56px] flex items-center justify-center top-6 left-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-white text-2xl p-3 rounded-full cursor-pointer transition-colors duration-300 hover:scale-110 z-10"
+    >
+      <i class="fa-solid fa-info"></i>
+    </button>
+
+    <!-- Instructions Modal -->
+    <div
+      id="instructionsModal"
+      class="fixed flex items-center justify-center hidden z-50 w-screen h-screen backdrop-blur-sm bg-black/90"
+    >
+      <div
+        class="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 p-6 rounded-lg w-11/12 md:w-1/2 lg:w-1/3 text-center text-white border border-white relative"
+      >
+        <h3 class="text-2xl font-bold mb-4">How to Play</h3>
+        <p class="mb-4">
+          In this game, you need to type your name as fast as possible.
+        </p>
+        <p class="mb-4">
+          As you type, random letters will appear in place of the correct ones.
+        </p>
+        <p class="mb-4">
+          The timer will start once you begin typing. Your time will be recorded
+          and displayed after you submit the form.
+        </p>
+        <!-- Close Button positioned at the top right of the modal -->
+        <button
+          id="closeBtn"
+          class="absolute top-4 right-4 text-white text-xl font-bold hover:text-red-500 transition-colors"
+        >
+          <i class="fa-solid fa-xmark text-3xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Leaderboard Button -->
+    <a
+      href="/entries"
+      title="Leaderboard"
+      class="fixed top-6 right-6 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-yellow-300 text-2xl p-3 rounded-full cursor-pointer transition-colors duration-300 hover:scale-110 z-10"
+    >
+      <i class="fa-solid fa-web-awesome"></i>
+    </a>
+
+    <!-- Backdrop Blur Div -->
+    <div class="fixed w-full h-full backdrop-blur-sm bg-black/50 z-0"></div>
+
+    <!-- Game Interface -->
+    <div
+      class="w-full max-w-lg md:max-w-2xl text-center z-10 flex flex-col justify-center items-center px-4"
+    >
+      <h2
+        class="title text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600"
+      >
+        Scramble Sprint
+      </h2>
+
+      <div class="mb-6 md:mb-8">
+        <p class="text-lg md:text-xl text-gray-400 font-semibold">
+          Scramble your way to the top!
+        </p>
+      </div>
+
+      <form
+        id="gameForm"
+        action="/submit"
+        method="post"
+        class="space-y-4 md:space-y-6"
+      >
+        <!-- Username Input -->
+        <div class="relative mb-4 md:mb-6">
+          <input
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            id="username"
+            name="username"
+            class="w-full p-4 md:p-5 text-xl md:text-3xl font-bold text-center bg-gray-700 text-white border-4 border-white rounded-xl focus:outline-none focus:ring-4 focus:ring-gray-500 transition duration-300"
+            placeholder="Enter your name"
+            required
+          />
+        </div>
+
+        <!-- Timer Display -->
+        <div
+          id="time"
+          class="text-3xl md:text-4xl text-red-500 mb-4 md:mb-6 font-bold glow-text"
+        >
+          Time: 00:00
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          id="submitBtn"
+          class="w-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-white py-4 rounded-lg font-semibold hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-400 focus:ring-offset-2 transition-all duration-300"
+        >
+          Submit Your Time
+        </button>
+      </form>
+    </div>
+
+    <script>
+      // Game variables
+      const usernameInput = document.getElementById("username");
+      const timeDisplay = document.getElementById("time");
+      const successMessage = document.getElementById("successMessage");
+      const form = document.getElementById("gameForm");
+      const infoBtn = document.getElementById("infoBtn");
+      const instructionsModal = document.getElementById("instructionsModal");
+      const closeBtn = document.getElementById("closeBtn");
+
+      let startTime,
+        elapsedTime = 0,
+        stopwatchInterval;
+
+      // Start stopwatch
+      function startStopwatch() {
+        startTime = Date.now();
+        stopwatchInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          const seconds = Math.floor(elapsedTime / 1000);
+          const minutes = Math.floor(seconds / 60);
+          const remainingSeconds = seconds % 60;
+          timeDisplay.textContent = `Time: ${minutes
+            .toString()
+            .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+        }, 1000);
+      }
+
+      // Random letter generator
+      function getRandomLetter() {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        if (!letters || letters.length === 0) {
+          console.error("Error: Letters variable is undefined or empty.");
+          return ""; // Return an empty string to prevent crashes
+        }
+        return letters.charAt(Math.floor(Math.random() * letters.length));
+      }
+
+      // Handle keydown and replace with random letter
+      usernameInput.addEventListener("input", (event) => {
+        if (elapsedTime === 0) {
+          startStopwatch();
+        }
+
+        let lastChar = event.data; // The last typed character
+        if (lastChar && lastChar.length === 1 && lastChar !== " ") {
+          const randomLetter = getRandomLetter();
+          usernameInput.value = usernameInput.value.slice(0, -1) + randomLetter; // Replace last character
+        }
+      });
+
+      // Handle form submission
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        clearInterval(stopwatchInterval); // Stop the stopwatch when form is submitted
+
+        // Capture the time taken in seconds
+        const timeTaken = Math.floor(elapsedTime / 1000);
+
+        // Send the data to the server
+        fetch("/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: usernameInput.value, timeTaken }),
+        })
+          .then(() => {
+            // Redirect to the entries page
+            window.location.href = "/entries";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Something went wrong!");
+          });
+      });
+
+      // Show instructions modal when info button is clicked
+      infoBtn.addEventListener("click", () => {
+        instructionsModal.classList.remove("hidden");
+      });
+
+      // Close the modal when close button is clicked
+      closeBtn.addEventListener("click", () => {
+        instructionsModal.classList.add("hidden");
+      });
+    </script>
+    <script
+      src="https://kit.fontawesome.com/2fa914bebf.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-require('dotenv').config();
+require("dotenv").config();
 
 const app = express();
 
@@ -12,7 +12,10 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI);
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("Mongoose Connected"))
+  .catch((err) => console.log("Error occured:", err));
 
 // Define Schema and Model
 const userSchema = new mongoose.Schema({
@@ -48,7 +51,7 @@ app.post("/submit", async (req, res) => {
       await newUser.save();
     }
 
-    res.redirect('/entries'); // Redirect to the entries page
+    res.redirect("/entries"); // Redirect to the entries page
   } catch (error) {
     console.error("Error handling submission:", error);
     res.status(500).send("An error occurred.");

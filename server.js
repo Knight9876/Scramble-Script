@@ -61,8 +61,5 @@ app.get("/entries", async (req, res) => {
   res.render("entries", { users }); // Render the entries page
 });
 
-// Start Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+// **Export the app for Vercel**
+module.exports = app;

@@ -30,7 +30,7 @@ const User = mongoose.model("User", userSchema);
 // Routes
 // Handle home route
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Handle Form Submission
